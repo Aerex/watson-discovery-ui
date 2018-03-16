@@ -57,7 +57,7 @@ const version_date = '2017-11-07';
 if (process.env.service_watson_discovery !== undefined) {
     // Authentication for starter kit + Kubernetes
     var service_watson_discovery = JSON.parse(process.env.service_watson_discovery);
-    discovery = new DiscoveryV1({
+    discovery = watson.discovery({
         version: version,
         url: service_watson_discovery['url'],
         username: service_watson_discovery['username'],
@@ -66,7 +66,7 @@ if (process.env.service_watson_discovery !== undefined) {
     });
 } else {
     // Credentials will be pulled in from VCAP_SERVICES or .env
-    discovery = new DiscoveryV1({
+    discovery = watson.discovery({
         version: version,
         version_date: version_date,
     });
