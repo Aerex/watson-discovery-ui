@@ -51,11 +51,26 @@ arrayOfFiles.forEach(function(file) {
 // out of memory errors.
 //discoveryDocs = discoveryDocs.slice(0,100);
 
-const discovery = watson.discovery({
-  // uname/pwd will be pulled in from VCAP_SERVICES or .env
-  version: 'v1',
-  version_date: '2017-11-07'
-});
+var discovery;
+const version_date = '2017-08-01';
+const qs = { aggregation: `[${queryBuilder.aggregations.join(',')}]` };
+if (process.env.service_watson_discovery !== undefined) {
+    // Authentication for starter kit + Kubernetes
+    var service_watson_discovery = JSON.parse(process.env.service_watson_discovery);
+    discovery = new DiscoveryV1({
+        url: service_watson_discovery['url'],
+        username: service_watson_discovery['username'],
+        password: service_watson_discovery['password'],
+        version_date: version_date,
+        qs: qs,
+    });
+} else {
+    // Credentials will be pulled in from VCAP_SERVICES or .env
+    discovery = new DiscoveryV1({
+        version_date: version_date,
+        qs: qs,
+    });
+}
 
 // make 'query' a promise function
 discovery.query = Promise.promisify(discovery.query);
